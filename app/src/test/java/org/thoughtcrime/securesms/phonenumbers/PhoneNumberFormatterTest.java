@@ -16,6 +16,13 @@ public class PhoneNumberFormatterTest {
     PhoneNumberFormatter formatter = new PhoneNumberFormatter("+14152222222");
     assertEquals(formatter.format("bonbon"), "bonbon");
   }
+  
+  // New
+  @Test
+  public void testADifferentLanguage() throws Exception {
+    PhoneNumberFormatter formatter = new PhoneNumberFormatter("+14152222222");
+    assertEquals(formatter.format("شماره تلفن"), "شماره تلفن");
+  }
 
   @Test
   public void testAddressShortCode() throws Exception {
@@ -41,6 +48,11 @@ public class PhoneNumberFormatterTest {
     assertEquals(formatter.format("+1 (415) 111 1128"), "+14151111128");
     assertEquals(formatter.format("911"), "911");
     assertEquals(formatter.format("+456-7890"), "+4567890");
+    // New
+    assertEquals(formatter.format("+1 415,111,1129"), "+14151111129");
+    assertEquals(formatter.format("+1 415*111*1130"), "+14151111130");
+    assertEquals(formatter.format("+1 415_111_1131"), "+14151111131");
+    assertEquals(formatter.format("+1 415          111          1132"), "+14151111132");
 
     formatter = new PhoneNumberFormatter("+442079460010");
     assertEquals(formatter.format("(020) 7946 0018"), "+442079460018");
@@ -58,6 +70,13 @@ public class PhoneNumberFormatterTest {
     assertEquals("+11234567890", formatter.format("011 1 123 456 7890"));
     assertEquals("+5511912345678", formatter.format("0115511912345678"));
     assertEquals("+16105880522", formatter.format("+16105880522"));
+    // New
+    assertEquals("0", formatter.format("0"));
+    assertEquals("+16105880522", formatter.format("+16105880522"));
+    assertEquals("+161058805223", formatter.format("+161058805223"));
+    assertEquals("+1610588052234", formatter.format("+1610588052234"));
+    assertEquals("+161058805223459", formatter.format("+161058805223459"));
+    assertEquals("+1610588052234590", formatter.format("+1610588052234590"));
   }
 
   @Test
