@@ -198,6 +198,19 @@ public final class GroupChangeReconstructTest {
     assertEquals(DecryptedGroupChange.newBuilder().addDeletePendingMembers(pendingMemberRemoval(uuidNew)).build(), decryptedGroupChange);
   }
 
+  // To see if user can be declined for a group with one member
+  @Test
+  public void uninvited_member_by_invite_1() {
+    UUID           uuid1 = UUID.randomUUID();
+    UUID           uuid2 = UUID.randomUUID();
+    DecryptedGroup from    = DecryptedGroup.newBuilder().addMembers(member(uuid1)).addPendingMembers(pendingMember(uuid2)).build();
+    DecryptedGroup to      = DecryptedGroup.newBuilder().addMembers(member(uuid1)).build();
+
+    DecryptedGroupChange decryptedGroupChange = GroupChangeReconstruct.reconstructGroupChange(from, to);
+
+    assertEquals(DecryptedGroupChange.newBuilder().addDeletePendingMembers(pendingMemberRemoval(uuid2)).build(), decryptedGroupChange);
+  }
+
   // To see if the new member can be coreectly added to a group with two members.
   @Test
   public void new_member_2() {
@@ -251,18 +264,19 @@ public final class GroupChangeReconstructTest {
 
     assertEquals(DecryptedGroupChange.newBuilder().addPromotePendingMembers(member(uuid2)).build(), decryptedGroupChange);
   }
-
-  // To see if the uninvited member can be invited to a group with two members
+  
+  // To see if user can be declined for a group with two members
   @Test
   public void uninvited_member_by_invite_2() {
     UUID           uuid1 = UUID.randomUUID();
     UUID           uuid2 = UUID.randomUUID();
-    DecryptedGroup from    = DecryptedGroup.newBuilder().addMembers(member(uuid1)).addPendingMembers(pendingMember(uuid2)).build();
-    DecryptedGroup to      = DecryptedGroup.newBuilder().addMembers(member(uuid1)).build();
+    UUID           uuid3 = UUID.randomUUID();
+    DecryptedGroup from    = DecryptedGroup.newBuilder().addMembers(member(uuid1)).addMembers(member(uuid2)).addPendingMembers(pendingMember(uuid3)).build();
+    DecryptedGroup to      = DecryptedGroup.newBuilder().addMembers(member(uuid1)).addMembers(member(uuid2)).build();
 
     DecryptedGroupChange decryptedGroupChange = GroupChangeReconstruct.reconstructGroupChange(from, to);
 
-    assertEquals(DecryptedGroupChange.newBuilder().addDeletePendingMembers(pendingMemberRemoval(uuid2)).build(), decryptedGroupChange);
+    assertEquals(DecryptedGroupChange.newBuilder().addDeletePendingMembers(pendingMemberRemoval(uuid3)).build(), decryptedGroupChange);
   }
 
   // To see if the new member can be coreectly added to a group with three members.
@@ -323,19 +337,21 @@ public final class GroupChangeReconstructTest {
 
     assertEquals(DecryptedGroupChange.newBuilder().addPromotePendingMembers(member(uuid3)).build(), decryptedGroupChange);
   }
-
-  // To see if the uninvited member can be invited to a group with three members
+  
+    // To see if user can be declined for a group with three members
   @Test
   public void uninvited_member_by_invite_3() {
     UUID           uuid1 = UUID.randomUUID();
     UUID           uuid2 = UUID.randomUUID();
     UUID           uuid3 = UUID.randomUUID();
-    DecryptedGroup from    = DecryptedGroup.newBuilder().addMembers(member(uuid1)).addMembers(member(uuid2)).addPendingMembers(pendingMember(uuid3)).build();
-    DecryptedGroup to      = DecryptedGroup.newBuilder().addMembers(member(uuid1)).addMembers(member(uuid2)).build();
+    UUID           uuid4 = UUID.randomUUID();
+
+    DecryptedGroup from    = DecryptedGroup.newBuilder().addMembers(member(uuid1)).addMembers(member(uuid2)).addMembers(member(uuid3)).addPendingMembers(pendingMember(uuid4)).build();
+    DecryptedGroup to      = DecryptedGroup.newBuilder().addMembers(member(uuid1)).addMembers(member(uuid2)).addMembers(member(uuid3)).build();
 
     DecryptedGroupChange decryptedGroupChange = GroupChangeReconstruct.reconstructGroupChange(from, to);
 
-    assertEquals(DecryptedGroupChange.newBuilder().addDeletePendingMembers(pendingMemberRemoval(uuid3)).build(), decryptedGroupChange);
+    assertEquals(DecryptedGroupChange.newBuilder().addDeletePendingMembers(pendingMemberRemoval(uuid4)).build(), decryptedGroupChange);
   }
 
   // To see if the new member can be coreectly added to a group with four members.
@@ -399,21 +415,22 @@ public final class GroupChangeReconstructTest {
 
     assertEquals(DecryptedGroupChange.newBuilder().addPromotePendingMembers(member(uuid4)).build(), decryptedGroupChange);
   }
-
-  // To see if the uninvited member can be invited to a group with four members
+  
+  // To see if user can be declined for a group with four members
   @Test
   public void uninvited_member_by_invite_4() {
     UUID           uuid1 = UUID.randomUUID();
     UUID           uuid2 = UUID.randomUUID();
     UUID           uuid3 = UUID.randomUUID();
     UUID           uuid4 = UUID.randomUUID();
+    UUID           uuid5 = UUID.randomUUID();
 
-    DecryptedGroup from    = DecryptedGroup.newBuilder().addMembers(member(uuid1)).addMembers(member(uuid2)).addMembers(member(uuid3)).addPendingMembers(pendingMember(uuid4)).build();
-    DecryptedGroup to      = DecryptedGroup.newBuilder().addMembers(member(uuid1)).addMembers(member(uuid2)).addMembers(member(uuid3)).build();
+    DecryptedGroup from    = DecryptedGroup.newBuilder().addMembers(member(uuid1)).addMembers(member(uuid2)).addMembers(member(uuid3)).addMembers(member(uuid4)).addPendingMembers(pendingMember(uuid5)).build();
+    DecryptedGroup to      = DecryptedGroup.newBuilder().addMembers(member(uuid1)).addMembers(member(uuid2)).addMembers(member(uuid3)).addMembers(member(uuid4)).build();
 
     DecryptedGroupChange decryptedGroupChange = GroupChangeReconstruct.reconstructGroupChange(from, to);
 
-    assertEquals(DecryptedGroupChange.newBuilder().addDeletePendingMembers(pendingMemberRemoval(uuid4)).build(), decryptedGroupChange);
+    assertEquals(DecryptedGroupChange.newBuilder().addDeletePendingMembers(pendingMemberRemoval(uuid5)).build(), decryptedGroupChange);
   }
 
   // To see if the new member can be coreectly added to a group with 150 members.
