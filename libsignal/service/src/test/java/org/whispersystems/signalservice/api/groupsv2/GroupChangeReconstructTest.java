@@ -419,7 +419,7 @@ public final class GroupChangeReconstructTest {
   // To see if the new member can be coreectly added to a group with 150 members.
   @Test
   public void new_member_hugeGroup() {
-    List<UUID> set = new ArrayList<UUID>();  // import
+    List<UUID> set = new ArrayList<UUID>();  
     while (set.size() < 151) {
       UUID           uuid = UUID.randomUUID();
       if (!set.contains(uuid)) {
@@ -499,7 +499,7 @@ public final class GroupChangeReconstructTest {
   // To see if the new member can be coreectly added to a group with 1000 members.
   @Test
   public void new_member_hugeGroup1000() {
-    List<UUID> set = new ArrayList<UUID>();  // import
+    List<UUID> set = new ArrayList<UUID>();  
     while (set.size() < 1001) {
       UUID           uuid = UUID.randomUUID();
       if (!set.contains(uuid)) {
@@ -594,7 +594,7 @@ public final class GroupChangeReconstructTest {
   // To see if the member can be correctly removed from a group with 1000 members
   @Test
   public void remove_member_hugeGroup1000() {
-    List<UUID> set = new ArrayList<UUID>();  // import
+    List<UUID> set = new ArrayList<UUID>();  
     while (set.size() < 1001) {
       UUID           uuid = UUID.randomUUID();
       if (!set.contains(uuid)) {
