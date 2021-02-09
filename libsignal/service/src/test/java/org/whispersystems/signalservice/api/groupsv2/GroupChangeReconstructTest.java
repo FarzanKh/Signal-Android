@@ -195,6 +195,305 @@ public final class GroupChangeReconstructTest {
     assertEquals(DecryptedGroupChange.newBuilder().addDeletePendingMembers(pendingMemberRemoval(uuidNew)).build(), decryptedGroupChange);
   }
 
+  // To see if the new member can be coreectly added to a group with two members.
+  @Test
+  public void new_member_2() {
+    UUID           uuid1 = UUID.randomUUID();
+    UUID           uuid2 = UUID.randomUUID();
+    UUID           uuid3 = UUID.randomUUID();
+
+    DecryptedGroup from    = DecryptedGroup.newBuilder().addMembers(member(uuid1)).addMembers(member(uuid2)).build();
+    DecryptedGroup to      = DecryptedGroup.newBuilder().addMembers(member(uuid1)).addMembers(member(uuid2)).addMembers(member(uuid3)).build();
+
+    DecryptedGroupChange decryptedGroupChange = GroupChangeReconstruct.reconstructGroupChange(from, to);
+
+    assertEquals(DecryptedGroupChange.newBuilder().addNewMembers(member(uuid3)).build(), decryptedGroupChange);
+  }
+
+  // To see if the old member can be added to a group with two members.
+  @Test
+  public void old_member_2() {
+    UUID           uuid1 = UUID.randomUUID();
+    UUID           uuid2 = UUID.randomUUID();
+    DecryptedGroup from    = DecryptedGroup.newBuilder().addMembers(member(uuid1)).addMembers(member(uuid2)).build();
+    DecryptedGroup to      = DecryptedGroup.newBuilder().addMembers(member(uuid1)).addMembers(member(uuid2)).addMembers(member(uuid2)).build();
+
+    DecryptedGroupChange decryptedGroupChange = GroupChangeReconstruct.reconstructGroupChange(from, to);
+
+    assertEquals(DecryptedGroupChange.newBuilder().build(), decryptedGroupChange);
+  }
+
+  // To see if the member can be correctly removed from a group with two members
+  @Test
+  public void removed_member_2() {
+    UUID           uuid1 = UUID.randomUUID();
+    UUID           uuid2 = UUID.randomUUID();
+    DecryptedGroup from    = DecryptedGroup.newBuilder().addMembers(member(uuid1)).addMembers(member(uuid2)).build();
+    DecryptedGroup to      = DecryptedGroup.newBuilder().addMembers(member(uuid1)).build();
+
+    DecryptedGroupChange decryptedGroupChange = GroupChangeReconstruct.reconstructGroupChange(from, to);
+
+    assertEquals(DecryptedGroupChange.newBuilder().addDeleteMembers(UuidUtil.toByteString(uuid2)).build(), decryptedGroupChange);
+  }
+
+  // To see if the invited member can be correctly invited to a group with two members
+  @Test
+  public void new_member_by_invite_2() {
+    UUID           uuid1 = UUID.randomUUID();
+    UUID           uuid2 = UUID.randomUUID();
+    DecryptedGroup from    = DecryptedGroup.newBuilder().addMembers(member(uuid1)).addPendingMembers(pendingMember(uuid2)).build();
+    DecryptedGroup to      = DecryptedGroup.newBuilder().addMembers(member(uuid1)).addMembers(member(uuid2)).build();
+
+    DecryptedGroupChange decryptedGroupChange = GroupChangeReconstruct.reconstructGroupChange(from, to);
+
+    assertEquals(DecryptedGroupChange.newBuilder().addPromotePendingMembers(member(uuid2)).build(), decryptedGroupChange);
+  }
+
+  // To see if the uninvited member can be invited to a group with two members
+  @Test
+  public void uninvited_member_by_invite_2() {
+    UUID           uuid1 = UUID.randomUUID();
+    UUID           uuid2 = UUID.randomUUID();
+    DecryptedGroup from    = DecryptedGroup.newBuilder().addMembers(member(uuid1)).addPendingMembers(pendingMember(uuid2)).build();
+    DecryptedGroup to      = DecryptedGroup.newBuilder().addMembers(member(uuid1)).build();
+
+    DecryptedGroupChange decryptedGroupChange = GroupChangeReconstruct.reconstructGroupChange(from, to);
+
+    assertEquals(DecryptedGroupChange.newBuilder().addDeletePendingMembers(pendingMemberRemoval(uuid2)).build(), decryptedGroupChange);
+  }
+
+  // To see if the new member can be coreectly added to a group with three members.
+  @Test
+  public void new_member_3() {
+    UUID           uuid1 = UUID.randomUUID();
+    UUID           uuid2 = UUID.randomUUID();
+    UUID           uuid3 = UUID.randomUUID();
+    UUID           uuid4 = UUID.randomUUID();
+
+
+    DecryptedGroup from    = DecryptedGroup.newBuilder().addMembers(member(uuid1)).addMembers(member(uuid2)).addMembers(member(uuid3)).build();
+    DecryptedGroup to      = DecryptedGroup.newBuilder().addMembers(member(uuid1)).addMembers(member(uuid2)).addMembers(member(uuid3)).addMembers(member(uuid4)).build();
+
+    DecryptedGroupChange decryptedGroupChange = GroupChangeReconstruct.reconstructGroupChange(from, to);
+
+    assertEquals(DecryptedGroupChange.newBuilder().addNewMembers(member(uuid4)).build(), decryptedGroupChange);
+  }
+
+  // To see if the old member can be added to a group with three members.
+  @Test
+  public void old_member_3() {
+    UUID           uuid1 = UUID.randomUUID();
+    UUID           uuid2 = UUID.randomUUID();
+    UUID           uuid3 = UUID.randomUUID();
+    DecryptedGroup from    = DecryptedGroup.newBuilder().addMembers(member(uuid1)).addMembers(member(uuid2)).addMembers(member(uuid3)).build();
+    DecryptedGroup to      = DecryptedGroup.newBuilder().addMembers(member(uuid1)).addMembers(member(uuid2)).addMembers(member(uuid3)).addMembers(member(uuid3)).build();
+
+    DecryptedGroupChange decryptedGroupChange = GroupChangeReconstruct.reconstructGroupChange(from, to);
+
+    assertEquals(DecryptedGroupChange.newBuilder().build(), decryptedGroupChange);
+  }
+
+  // To see if the member can be correctly removed from a group with three members
+  @Test
+  public void removed_member_3() {
+    UUID           uuid1 = UUID.randomUUID();
+    UUID           uuid2 = UUID.randomUUID();
+    UUID           uuid3 = UUID.randomUUID();
+    DecryptedGroup from    = DecryptedGroup.newBuilder().addMembers(member(uuid1)).addMembers(member(uuid2)).addMembers(member(uuid3)).build();
+    DecryptedGroup to      = DecryptedGroup.newBuilder().addMembers(member(uuid1)).addMembers(member(uuid2)).build();
+
+    DecryptedGroupChange decryptedGroupChange = GroupChangeReconstruct.reconstructGroupChange(from, to);
+
+    assertEquals(DecryptedGroupChange.newBuilder().addDeleteMembers(UuidUtil.toByteString(uuid3)).build(), decryptedGroupChange);
+  }
+
+  // To see if the invited member can be correctly invited to a group with three members
+  @Test
+  public void new_member_by_invite_3() {
+    UUID           uuid1 = UUID.randomUUID();
+    UUID           uuid2 = UUID.randomUUID();
+    UUID           uuid3 = UUID.randomUUID();
+    DecryptedGroup from    = DecryptedGroup.newBuilder().addMembers(member(uuid1)).addMembers(member(uuid2)).addPendingMembers(pendingMember(uuid3)).build();
+    DecryptedGroup to      = DecryptedGroup.newBuilder().addMembers(member(uuid1)).addMembers(member(uuid2)).addMembers(member(uuid3)).build();
+
+    DecryptedGroupChange decryptedGroupChange = GroupChangeReconstruct.reconstructGroupChange(from, to);
+
+    assertEquals(DecryptedGroupChange.newBuilder().addPromotePendingMembers(member(uuid3)).build(), decryptedGroupChange);
+  }
+
+  // To see if the uninvited member can be invited to a group with three members
+  @Test
+  public void uninvited_member_by_invite_3() {
+    UUID           uuid1 = UUID.randomUUID();
+    UUID           uuid2 = UUID.randomUUID();
+    UUID           uuid3 = UUID.randomUUID();
+    DecryptedGroup from    = DecryptedGroup.newBuilder().addMembers(member(uuid1)).addMembers(member(uuid2)).addPendingMembers(pendingMember(uuid3)).build();
+    DecryptedGroup to      = DecryptedGroup.newBuilder().addMembers(member(uuid1)).addMembers(member(uuid2)).build();
+
+    DecryptedGroupChange decryptedGroupChange = GroupChangeReconstruct.reconstructGroupChange(from, to);
+
+    assertEquals(DecryptedGroupChange.newBuilder().addDeletePendingMembers(pendingMemberRemoval(uuid3)).build(), decryptedGroupChange);
+  }
+
+  // To see if the new member can be coreectly added to a group with four members.
+  @Test
+  public void new_member_4() {
+    UUID           uuid1 = UUID.randomUUID();
+    UUID           uuid2 = UUID.randomUUID();
+    UUID           uuid3 = UUID.randomUUID();
+    UUID           uuid4 = UUID.randomUUID();
+    UUID           uuid5 = UUID.randomUUID();
+    DecryptedGroup from    = DecryptedGroup.newBuilder().addMembers(member(uuid1)).addMembers(member(uuid2)).addMembers(member(uuid3)).addMembers(member(uuid4)).build();
+    DecryptedGroup to      = DecryptedGroup.newBuilder().addMembers(member(uuid1)).addMembers(member(uuid2)).addMembers(member(uuid3)).addMembers(member(uuid4)).addMembers(member(uuid5)).build();
+
+    DecryptedGroupChange decryptedGroupChange = GroupChangeReconstruct.reconstructGroupChange(from, to);
+
+    assertEquals(DecryptedGroupChange.newBuilder().addNewMembers(member(uuid5)).build(), decryptedGroupChange);
+  }
+
+  // To see if the old member can be added to a group with four members.
+  @Test
+  public void old_member_4() {
+    UUID           uuid1 = UUID.randomUUID();
+    UUID           uuid2 = UUID.randomUUID();
+    UUID           uuid3 = UUID.randomUUID();
+    UUID           uuid4 = UUID.randomUUID();
+    DecryptedGroup from    = DecryptedGroup.newBuilder().addMembers(member(uuid1)).addMembers(member(uuid2)).addMembers(member(uuid3)).addMembers(member(uuid4)).build();
+    DecryptedGroup to      = DecryptedGroup.newBuilder().addMembers(member(uuid1)).addMembers(member(uuid2)).addMembers(member(uuid3)).addMembers(member(uuid4)).addMembers(member(uuid4)).build();
+
+    DecryptedGroupChange decryptedGroupChange = GroupChangeReconstruct.reconstructGroupChange(from, to);
+
+    assertEquals(DecryptedGroupChange.newBuilder().build(), decryptedGroupChange);
+  }
+
+  // To see if the member can be correctly removed from a group with four members
+  @Test
+  public void removed_member_4() {
+    UUID           uuid1 = UUID.randomUUID();
+    UUID           uuid2 = UUID.randomUUID();
+    UUID           uuid3 = UUID.randomUUID();
+    UUID           uuid4 = UUID.randomUUID();
+    DecryptedGroup from    = DecryptedGroup.newBuilder().addMembers(member(uuid1)).addMembers(member(uuid2)).addMembers(member(uuid3)).addMembers(member(uuid4)).build();
+    DecryptedGroup to      = DecryptedGroup.newBuilder().addMembers(member(uuid1)).addMembers(member(uuid2)).addMembers(member(uuid3)).build();
+
+    DecryptedGroupChange decryptedGroupChange = GroupChangeReconstruct.reconstructGroupChange(from, to);
+
+    assertEquals(DecryptedGroupChange.newBuilder().addDeleteMembers(UuidUtil.toByteString(uuid4)).build(), decryptedGroupChange);
+  }
+
+  // To see if the invited member can be correctly invited to a group with four members
+  @Test
+  public void new_member_by_invite_4() {
+    UUID           uuid1 = UUID.randomUUID();
+    UUID           uuid2 = UUID.randomUUID();
+    UUID           uuid3 = UUID.randomUUID();
+    UUID           uuid4 = UUID.randomUUID();
+
+    DecryptedGroup from    = DecryptedGroup.newBuilder().addMembers(member(uuid1)).addMembers(member(uuid2)).addMembers(member(uuid3)).addPendingMembers(pendingMember(uuid4)).build();
+    DecryptedGroup to      = DecryptedGroup.newBuilder().addMembers(member(uuid1)).addMembers(member(uuid2)).addMembers(member(uuid3)).addMembers(member(uuid4)).build();
+
+    DecryptedGroupChange decryptedGroupChange = GroupChangeReconstruct.reconstructGroupChange(from, to);
+
+    assertEquals(DecryptedGroupChange.newBuilder().addPromotePendingMembers(member(uuid4)).build(), decryptedGroupChange);
+  }
+
+  // To see if the uninvited member can be invited to a group with four members
+  @Test
+  public void uninvited_member_by_invite_4() {
+    UUID           uuid1 = UUID.randomUUID();
+    UUID           uuid2 = UUID.randomUUID();
+    UUID           uuid3 = UUID.randomUUID();
+    UUID           uuid4 = UUID.randomUUID();
+
+    DecryptedGroup from    = DecryptedGroup.newBuilder().addMembers(member(uuid1)).addMembers(member(uuid2)).addMembers(member(uuid3)).addPendingMembers(pendingMember(uuid4)).build();
+    DecryptedGroup to      = DecryptedGroup.newBuilder().addMembers(member(uuid1)).addMembers(member(uuid2)).addMembers(member(uuid3)).build();
+
+    DecryptedGroupChange decryptedGroupChange = GroupChangeReconstruct.reconstructGroupChange(from, to);
+
+    assertEquals(DecryptedGroupChange.newBuilder().addDeletePendingMembers(pendingMemberRemoval(uuid4)).build(), decryptedGroupChange);
+  }
+
+  // To see if the new member can be coreectly added to a group with 150 members.
+  @Test
+  public void new_member_hugeGroup() {
+    List<UUID> set = new ArrayList<UUID>();  // import
+    while (set.size() < 151) {
+      UUID           uuid = UUID.randomUUID();
+      if (!set.contains(uuid)) {
+        set.add(uuid);
+      }
+    }
+
+        DecryptedGroup from    = DecryptedGroup.newBuilder()
+                .addMembers(member(set.get(0))).addMembers(member(set.get(1))).addMembers(member(set.get(2))).addMembers(member(set.get(3))).addMembers(member(set.get(4))).addMembers(member(set.get(5))).addMembers(member(set.get(6)))
+                .addMembers(member(set.get(7))).addMembers(member(set.get(8))).addMembers(member(set.get(9))).addMembers(member(set.get(10))).
+                        addMembers(member(set.get(11))).addMembers(member(set.get(12))).addMembers(member(set.get(13))).addMembers(member(set.get(14))).addMembers(member(set.get(15))).addMembers(member(set.get(16))).addMembers(member(set.get(17)))
+                .addMembers(member(set.get(18))).addMembers(member(set.get(19))).addMembers(member(set.get(20))).
+                        addMembers(member(set.get(21))).addMembers(member(set.get(22))).addMembers(member(set.get(23))).addMembers(member(set.get(24))).addMembers(member(set.get(25))).addMembers(member(set.get(26))).addMembers(member(set.get(27)))
+                .addMembers(member(set.get(28))).addMembers(member(set.get(29))).addMembers(member(set.get(30))).
+                        addMembers(member(set.get(31))).addMembers(member(set.get(32))).addMembers(member(set.get(33))).addMembers(member(set.get(34))).addMembers(member(set.get(35))).addMembers(member(set.get(36))).addMembers(member(set.get(37)))
+                .addMembers(member(set.get(38))).addMembers(member(set.get(39))).addMembers(member(set.get(40))).
+                        addMembers(member(set.get(41))).addMembers(member(set.get(42))).addMembers(member(set.get(43))).addMembers(member(set.get(44))).addMembers(member(set.get(45))).addMembers(member(set.get(46))).addMembers(member(set.get(47)))
+                .addMembers(member(set.get(48))).addMembers(member(set.get(49))).addMembers(member(set.get(50))).
+                        addMembers(member(set.get(51))).addMembers(member(set.get(52))).addMembers(member(set.get(53))).addMembers(member(set.get(54))).addMembers(member(set.get(55))).addMembers(member(set.get(56))).addMembers(member(set.get(57)))
+                .addMembers(member(set.get(58))).addMembers(member(set.get(59))).addMembers(member(set.get(60))).
+                        addMembers(member(set.get(61))).addMembers(member(set.get(62))).addMembers(member(set.get(63))).addMembers(member(set.get(64))).addMembers(member(set.get(65))).addMembers(member(set.get(66))).addMembers(member(set.get(67)))
+                .addMembers(member(set.get(68))).addMembers(member(set.get(69))).addMembers(member(set.get(70))).
+                        addMembers(member(set.get(71))).addMembers(member(set.get(72))).addMembers(member(set.get(73))).addMembers(member(set.get(74))).addMembers(member(set.get(75))).addMembers(member(set.get(76))).addMembers(member(set.get(77)))
+                .addMembers(member(set.get(78))).addMembers(member(set.get(79))).addMembers(member(set.get(80))).
+                        addMembers(member(set.get(81))).addMembers(member(set.get(82))).addMembers(member(set.get(83))).addMembers(member(set.get(84))).addMembers(member(set.get(85))).addMembers(member(set.get(86))).addMembers(member(set.get(87)))
+                .addMembers(member(set.get(88))).addMembers(member(set.get(89))).addMembers(member(set.get(90))).
+                        addMembers(member(set.get(91))).addMembers(member(set.get(92))).addMembers(member(set.get(93))).addMembers(member(set.get(94))).addMembers(member(set.get(95))).addMembers(member(set.get(96))).addMembers(member(set.get(97)))
+                .addMembers(member(set.get(98))).addMembers(member(set.get(99))).addMembers(member(set.get(100))).
+                        addMembers(member(set.get(101))).addMembers(member(set.get(102))).addMembers(member(set.get(103))).addMembers(member(set.get(104))).addMembers(member(set.get(105))).addMembers(member(set.get(106))).addMembers(member(set.get(107)))
+                .addMembers(member(set.get(108))).addMembers(member(set.get(109))).addMembers(member(set.get(110))).
+                        addMembers(member(set.get(111))).addMembers(member(set.get(112))).addMembers(member(set.get(113))).addMembers(member(set.get(114))).addMembers(member(set.get(115))).addMembers(member(set.get(116))).addMembers(member(set.get(117)))
+                .addMembers(member(set.get(118))).addMembers(member(set.get(119))).addMembers(member(set.get(120))).
+                        addMembers(member(set.get(121))).addMembers(member(set.get(122))).addMembers(member(set.get(123))).addMembers(member(set.get(124))).addMembers(member(set.get(125))).addMembers(member(set.get(126))).addMembers(member(set.get(127)))
+                .addMembers(member(set.get(128))).addMembers(member(set.get(129))).addMembers(member(set.get(130))).
+                        addMembers(member(set.get(131))).addMembers(member(set.get(132))).addMembers(member(set.get(133))).addMembers(member(set.get(134))).addMembers(member(set.get(135))).addMembers(member(set.get(136))).addMembers(member(set.get(137)))
+                .addMembers(member(set.get(138))).addMembers(member(set.get(139))).addMembers(member(set.get(140))).
+                        addMembers(member(set.get(141))).addMembers(member(set.get(142))).addMembers(member(set.get(143))).addMembers(member(set.get(144))).addMembers(member(set.get(145))).addMembers(member(set.get(146))).addMembers(member(set.get(147)))
+                .addMembers(member(set.get(148))).addMembers(member(set.get(149))).build();
+
+    DecryptedGroup to     = DecryptedGroup.newBuilder()
+            .addMembers(member(set.get(0))).addMembers(member(set.get(1))).addMembers(member(set.get(2))).addMembers(member(set.get(3))).addMembers(member(set.get(4))).addMembers(member(set.get(5))).addMembers(member(set.get(6)))
+            .addMembers(member(set.get(7))).addMembers(member(set.get(8))).addMembers(member(set.get(9))).addMembers(member(set.get(10))).
+                    addMembers(member(set.get(11))).addMembers(member(set.get(12))).addMembers(member(set.get(13))).addMembers(member(set.get(14))).addMembers(member(set.get(15))).addMembers(member(set.get(16))).addMembers(member(set.get(17)))
+            .addMembers(member(set.get(18))).addMembers(member(set.get(19))).addMembers(member(set.get(20))).
+                    addMembers(member(set.get(21))).addMembers(member(set.get(22))).addMembers(member(set.get(23))).addMembers(member(set.get(24))).addMembers(member(set.get(25))).addMembers(member(set.get(26))).addMembers(member(set.get(27)))
+            .addMembers(member(set.get(28))).addMembers(member(set.get(29))).addMembers(member(set.get(30))).
+                    addMembers(member(set.get(31))).addMembers(member(set.get(32))).addMembers(member(set.get(33))).addMembers(member(set.get(34))).addMembers(member(set.get(35))).addMembers(member(set.get(36))).addMembers(member(set.get(37)))
+            .addMembers(member(set.get(38))).addMembers(member(set.get(39))).addMembers(member(set.get(40))).
+                    addMembers(member(set.get(41))).addMembers(member(set.get(42))).addMembers(member(set.get(43))).addMembers(member(set.get(44))).addMembers(member(set.get(45))).addMembers(member(set.get(46))).addMembers(member(set.get(47)))
+            .addMembers(member(set.get(48))).addMembers(member(set.get(49))).addMembers(member(set.get(50))).
+                    addMembers(member(set.get(51))).addMembers(member(set.get(52))).addMembers(member(set.get(53))).addMembers(member(set.get(54))).addMembers(member(set.get(55))).addMembers(member(set.get(56))).addMembers(member(set.get(57)))
+            .addMembers(member(set.get(58))).addMembers(member(set.get(59))).addMembers(member(set.get(60))).
+                    addMembers(member(set.get(61))).addMembers(member(set.get(62))).addMembers(member(set.get(63))).addMembers(member(set.get(64))).addMembers(member(set.get(65))).addMembers(member(set.get(66))).addMembers(member(set.get(67)))
+            .addMembers(member(set.get(68))).addMembers(member(set.get(69))).addMembers(member(set.get(70))).
+                    addMembers(member(set.get(71))).addMembers(member(set.get(72))).addMembers(member(set.get(73))).addMembers(member(set.get(74))).addMembers(member(set.get(75))).addMembers(member(set.get(76))).addMembers(member(set.get(77)))
+            .addMembers(member(set.get(78))).addMembers(member(set.get(79))).addMembers(member(set.get(80))).
+                    addMembers(member(set.get(81))).addMembers(member(set.get(82))).addMembers(member(set.get(83))).addMembers(member(set.get(84))).addMembers(member(set.get(85))).addMembers(member(set.get(86))).addMembers(member(set.get(87)))
+            .addMembers(member(set.get(88))).addMembers(member(set.get(89))).addMembers(member(set.get(90))).
+                    addMembers(member(set.get(91))).addMembers(member(set.get(92))).addMembers(member(set.get(93))).addMembers(member(set.get(94))).addMembers(member(set.get(95))).addMembers(member(set.get(96))).addMembers(member(set.get(97)))
+            .addMembers(member(set.get(98))).addMembers(member(set.get(99))).addMembers(member(set.get(100))).
+                    addMembers(member(set.get(101))).addMembers(member(set.get(102))).addMembers(member(set.get(103))).addMembers(member(set.get(104))).addMembers(member(set.get(105))).addMembers(member(set.get(106))).addMembers(member(set.get(107)))
+            .addMembers(member(set.get(108))).addMembers(member(set.get(109))).addMembers(member(set.get(110))).
+                    addMembers(member(set.get(111))).addMembers(member(set.get(112))).addMembers(member(set.get(113))).addMembers(member(set.get(114))).addMembers(member(set.get(115))).addMembers(member(set.get(116))).addMembers(member(set.get(117)))
+            .addMembers(member(set.get(118))).addMembers(member(set.get(119))).addMembers(member(set.get(120))).
+                    addMembers(member(set.get(121))).addMembers(member(set.get(122))).addMembers(member(set.get(123))).addMembers(member(set.get(124))).addMembers(member(set.get(125))).addMembers(member(set.get(126))).addMembers(member(set.get(127)))
+            .addMembers(member(set.get(128))).addMembers(member(set.get(129))).addMembers(member(set.get(130))).
+                    addMembers(member(set.get(131))).addMembers(member(set.get(132))).addMembers(member(set.get(133))).addMembers(member(set.get(134))).addMembers(member(set.get(135))).addMembers(member(set.get(136))).addMembers(member(set.get(137)))
+            .addMembers(member(set.get(138))).addMembers(member(set.get(139))).addMembers(member(set.get(140))).
+                    addMembers(member(set.get(141))).addMembers(member(set.get(142))).addMembers(member(set.get(143))).addMembers(member(set.get(144))).addMembers(member(set.get(145))).addMembers(member(set.get(146))).addMembers(member(set.get(147)))
+            .addMembers(member(set.get(148))).addMembers(member(set.get(149))).addMembers(member(set.get(150))).build();
+
+    DecryptedGroupChange decryptedGroupChange = GroupChangeReconstruct.reconstructGroupChange(from, to);
+
+    assertEquals(DecryptedGroupChange.newBuilder().addNewMembers(member(set.get(150))).build(), decryptedGroupChange);
+  }
+
+  
   @Test
   public void new_invite() {
     UUID           uuidNew = UUID.randomUUID();
