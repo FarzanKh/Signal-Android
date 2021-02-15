@@ -71,6 +71,20 @@ public final class ProfileNameTest {
     assertEquals("ProfileName should have expected family name", "Family", name.getFamilyName());
   }
 
+  // Newly added
+  @Test
+  public void givenProfileNameWithEmptyEnglishGivenNameAndEmptyEnglishFamilyName_whenIFromDataString_thenIExpectEmptyProfileName() {
+    // GIVEN
+    String profileName = "\0";
+
+    // WHEN
+    ProfileName name = ProfileName.fromSerialized(profileName);
+
+    // THEN
+    assertEquals("ProfileName should should be empty", "", name.getGivenName());
+    assertEquals("ProfileName should should be empty", "", name.getFamilyName());
+  }
+
   @Test
   public void givenProfileNameWithEnglishGivenNameAndCJKVFamilyName_whenIFromDataString_thenIExpectNonCJKVProfileName() {
     // GIVEN
@@ -186,4 +200,49 @@ public final class ProfileNameTest {
     assertEquals(name.getGivenName(), "Given");
     assertEquals(name.getFamilyName(), "Family");
   }
+
+  @Test
+  public void whenCalldescribeContents_thenIExpect0() {
+    // GIVEN
+    ProfileName name = ProfileName.fromParts("Given", "Family");
+
+    // WHEN
+    int result = name.describeContents();
+
+    // THEN
+    assertEquals(0, result);
+  }
+
+    @Test
+    public void whenCallequals_thenIExpectBoolean() {
+      // GIVEN
+      ProfileName name = ProfileName.fromParts("Given", "Family");
+      ProfileName name2 = ProfileName.fromParts("Given", "Family");
+      // WHEN
+      boolean result = name.equals(name2);
+      // THEN
+      assertEquals(true, result);
+    }
+
+    @Test
+    public void whenCalltoString_thenIExpectjoinedName() {
+      // GIVEN
+      ProfileName name = ProfileName.fromParts("Given", "Family");
+      // WHEN
+      String joinedName = name.toString();
+      // THEN
+      assertEquals("Given Family", joinedName);
+    }
+
+    @Test
+    public void whenCallhashCode_thenIExpecthashCode() {
+      // GIVEN
+      ProfileName name = ProfileName.fromParts("Given", "Family");
+      // WHEN
+      long expectedHahscode = (long) Objects.hash("Given", "Family");
+      long hashCode = (long) name.hashCode();
+      // THEN
+      assertEquals(expectedHahscode, hashCode);
+    }
+
 }
