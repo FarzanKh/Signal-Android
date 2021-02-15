@@ -71,7 +71,6 @@ public final class ProfileNameTest {
     assertEquals("ProfileName should have expected family name", "Family", name.getFamilyName());
   }
 
-  // Newly added
   @Test
   public void givenProfileNameWithEmptyEnglishGivenNameAndEmptyEnglishFamilyName_whenIFromDataString_thenIExpectEmptyProfileName() {
     // GIVEN
