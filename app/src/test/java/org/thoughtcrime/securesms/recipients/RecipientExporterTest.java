@@ -23,6 +23,34 @@ import static org.mockito.Mockito.when;
 @Config(manifest = Config.NONE, application = Application.class)
 public final class RecipientExporterTest {
 
+  private static final int TEST_CACHE_LIMIT = 5;
+
+  private RecipientIdCache recipientIdCache;
+  private LogRecorder      logRecorder;
+
+
+  // added constructor test
+  @Before
+  public void setup() {
+    recipientIdCache = new RecipientIdCache(TEST_CACHE_LIMIT);
+    logRecorder      = new LogRecorder();
+    Log.initialize(logRecorder);
+  }
+
+  @Test
+  public void asAddContactIntent_with_null() {
+    RecipientId recipientId = recipientIdCache.get(UUID.randomUUID(), null);
+    Recipient recipient = new Recipient(recipientId);
+
+    Intent intent = RecipientExporter.export(recipient).asAddContactIntent();
+
+    assertEquals(Intent.ACTION_INSERT_OR_EDIT, intent.getAction());
+    assertEquals(ContactsContract.Contacts.CONTENT_ITEM_TYPE, intent.getType());
+    assertNull(intent.getStringExtra(NAME));
+    assertNull(intent.getStringExtra(PHONE));//???
+    assertNull(intent.getStringExtra(EMAIL));
+  }
+
   @Test
   public void asAddContactIntent_with_phone_number() {
     Recipient recipient = givenPhoneRecipient(ProfileName.fromParts("Alice", null), "+1555123456");
@@ -49,6 +77,15 @@ public final class RecipientExporterTest {
     assertNull(intent.getStringExtra(PHONE));
   }
 
+  // add profile sharing test, default is false
+  @Test
+  public void isProfileSharing_test() {
+    Recipient recipient = givenEmailRecipient(ProfileName.fromParts("Bob", null), "bob@signal.org");
+    assertEquals(false, recipient.isProfileSharing() );
+
+  }
+
+
   private Recipient givenPhoneRecipient(ProfileName profileName, String phone) {
     Recipient recipient = mock(Recipient.class);
     when(recipient.getProfileName()).thenReturn(profileName);
@@ -70,4 +107,5 @@ public final class RecipientExporterTest {
 
     return recipient;
   }
+
 }
