@@ -4,12 +4,17 @@ import android.app.Application;
 import android.content.Intent;
 import android.provider.ContactsContract;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
+import org.signal.core.util.logging.Log;
 import org.thoughtcrime.securesms.profiles.ProfileName;
+import org.thoughtcrime.securesms.testutil.LogRecorder;
 import org.whispersystems.libsignal.util.guava.Optional;
+
+import java.util.UUID;
 
 import static android.provider.ContactsContract.Intents.Insert.EMAIL;
 import static android.provider.ContactsContract.Intents.Insert.NAME;
@@ -26,7 +31,7 @@ public final class RecipientExporterTest {
   private static final int TEST_CACHE_LIMIT = 5;
 
   private RecipientIdCache recipientIdCache;
-  private LogRecorder      logRecorder;
+  private LogRecorder logRecorder;
 
 
   // added constructor test
