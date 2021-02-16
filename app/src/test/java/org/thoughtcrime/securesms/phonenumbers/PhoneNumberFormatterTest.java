@@ -108,4 +108,21 @@ public class PhoneNumberFormatterTest {
     PhoneNumberFormatter formatter = new PhoneNumberFormatter("US", true);
     assertEquals(formatter.format("(415) 111-1122"), "+14151111122");
   }
+
+  @Test
+  public void testInvalidNumber() {
+    try {
+      PhoneNumberFormatter formatter = new PhoneNumberFormatter("1");
+    }
+    catch(AssertionError e){
+    }
+  }
+
+  @Test
+  public void testPrettyPrint() throws Exception{
+    PhoneNumberFormatter formatter = new PhoneNumberFormatter("+15555555555");
+    // omit superfluous characters with substring
+    assertEquals("(555) 555-5555", formatter.prettyPrintFormat("+15555555555").substring(1,15));
+  }
+
 }
