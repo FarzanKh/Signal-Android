@@ -109,6 +109,8 @@ public class PhoneNumberFormatterTest {
     assertEquals(formatter.format("(415) 111-1122"), "+14151111122");
   }
 
+  // new
+
   @Test
   public void testInvalidNumber() {
     try {
