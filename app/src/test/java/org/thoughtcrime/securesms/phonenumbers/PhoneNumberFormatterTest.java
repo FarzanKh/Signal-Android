@@ -1,15 +1,46 @@
 package org.thoughtcrime.securesms.phonenumbers;
 
 
+import android.content.Context;
+import android.text.TextUtils;
 import org.junit.Before;
 import org.junit.Test;
-
+import org.junit.runner.RunWith;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+import org.thoughtcrime.securesms.util.TextSecurePreferences;
 import static junit.framework.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.powermock.api.mockito.PowerMockito.when;
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({Context.class, TextSecurePreferences.class, TextUtils.class, PhoneNumberFormatter.class})
 public class PhoneNumberFormatterTest {
+  // add
+  private Context   context                           = mock(Context.class);
+  private TextSecurePreferences textSecurePreferences = mock(TextSecurePreferences.class);
+  private TextUtils textUtils                         = mock(TextUtils.class);
+  private PhoneNumberFormatter phoneNumberFormatter   = mock(PhoneNumberFormatter.class);
 
   @Before
-  public void setup() {}
+  public void setup() {
+    // add mocking
+    mockStatic(TextSecurePreferences.class);
+    when(textSecurePreferences.getLocalNumber(context)).thenReturn("858");
+
+    mockStatic(TextUtils.class);
+    when(textUtils.isEmpty("858")).thenReturn(false);
+  }
+
+  // test get using mock, the result should be null since firelds localNumber and localCountryCode didn't set.
+  @Test
+  public void testGetPhoneNumberFormatterWithNullFields() throws Exception {
+    PowerMockito.whenNew(PhoneNumberFormatter.class).withArguments("858").thenReturn(phoneNumberFormatter);
+    PhoneNumberFormatter formatter = PhoneNumberFormatter.get(context);
+    assertEquals(formatter.format("+1 858 111 1127"), null);
+  }
 
   @Test
   public void testAddressString() throws Exception {
