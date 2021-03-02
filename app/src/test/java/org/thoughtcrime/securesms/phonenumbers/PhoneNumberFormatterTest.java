@@ -34,12 +34,12 @@ public class PhoneNumberFormatterTest {
     when(textUtils.isEmpty("858")).thenReturn(false);
   }
 
-  // test get using mock, the result should be null since firelds localNumber and localCountryCode didn't set.
+  // test get using mock, the result should be null since field localCountryCode didn't set.
   @Test
   public void testGetPhoneNumberFormatterWithNullFields() throws Exception {
     PowerMockito.whenNew(PhoneNumberFormatter.class).withArguments("858").thenReturn(phoneNumberFormatter);
-    PhoneNumberFormatter formatter = PhoneNumberFormatter.get(context);
-    assertEquals(formatter.format("+1 858 111 1127"), null);
+    phoneNumberFormatter = phoneNumberFormatter.get(context);
+    assertEquals(phoneNumberFormatter.format("+1 858 111 1127"), null);
   }
 
   @Test
