@@ -7,6 +7,9 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
@@ -85,5 +88,20 @@ public final class LinkPreviewUtilTest_findValidPreviewUrls {
     assertTrue(links.containsUrl("https://android.com"));
     assertTrue(links.containsUrl("https://android.com/"));
     assertFalse(links.containsUrl("https://android.com//"));
+  }
+
+  @Test
+  public void changedLinkPreviewTest() {
+    List<Link> listOfLinks = new ArrayList<>();
+    Link google = new Link("https://google.com", 1);
+    Link apple = new Link("https://apple.com", 2);
+    Link amazon = new Link("https://amazon.com", 3);
+    listOfLinks.add(google);
+    listOfLinks.add(apple);
+    listOfLinks.add(amazon);
+
+    ChangedLinkPreviewUtil.Links links = new ChangedLinkPreviewUtil.Links(listOfLinks);
+    assertTrue(links.containsUrl("https://google.com"));
+
   }
 }
